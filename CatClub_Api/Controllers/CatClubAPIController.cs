@@ -1,4 +1,5 @@
-﻿using CatClub_Api.Models;
+﻿using CatClub_Api.Data;
+using CatClub_Api.Models;
 using CatClub_Api.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,6 +31,20 @@ namespace CatClub_Api.Controllers
                 new CatDTO{Id=1,Name="Kita"},
                 new CatDTO{Id=2, Name="Plamka"}
             };
+        }
+
+        [Route("GetCatsDTO_LocalStorage")]
+        [HttpGet]
+        public IEnumerable<CatDTO> GetCatsDTOFromStorage()
+        {
+            return CatStorage.catList;
+        }
+
+        [Route("GetCatsDTO_LocalStorage_GetCatById")]
+        [HttpGet("{id:int}")]
+        public CatDTO GetCatsDTOFromStorage(int id)
+        {
+            return CatStorage.catList.FirstOrDefault(x => x.Id == id);
         }
     }
 }
