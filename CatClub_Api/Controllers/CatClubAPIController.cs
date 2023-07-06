@@ -82,6 +82,13 @@ namespace CatClub_Api.Controllers
         }
 
         [HttpGet("GetCatsDTO_LocalStorage_GetCatById_ActionResultById/{id:int}")]
+        [ProducesResponseType(200, Type = typeof(CatDTO))]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        // [ProducesResponseType(StatusCodes.Status200OK)]
+        // [ProducesResponseType(StatusCodes.Status201Created)]
+        // Jako, że przy ActionResult podaliśmy <CatDTO>, oczekiwany rezultat będzie typu CatDTO
+        // Możemy natomiast zastosować silną typizację przy zwracaniu konkretnego kodu z pomocą Type = Type of, w adnotacji
         public ActionResult<CatDTO> GetCatsDTOFromStorage_ActionResult(int id)
         {
             // 3 cats hardcoded starting from 0 index, indexes below 0 not allowed
