@@ -9,8 +9,8 @@ namespace CatClub_Api.Controllers
     [ApiController]
     public class CatClubAPIController : ControllerBase
     {
-        [Route("GetCats")]
-        [HttpGet]
+        
+        [HttpGet("GetCats")]
         public IEnumerable<Cat> GetCats()
         {
             return new List<Cat>()
@@ -21,8 +21,8 @@ namespace CatClub_Api.Controllers
             };
 
         }
-        [Route("GetCatsDTO")]
-        [HttpGet]
+        
+        [HttpGet("GetCatsDTO")]
         public IEnumerable<CatDTO> GetCatsDTO()
         {
             return new List<CatDTO>
@@ -32,20 +32,18 @@ namespace CatClub_Api.Controllers
                 new CatDTO{Id=2, Name="Plamka"}
             };
         }
-
-        [Route("GetCatsDTO_LocalStorage")]
-        [HttpGet]
+        
+        [HttpGet("GetCatsDTO_LocalStorage")]
         public IEnumerable<CatDTO> GetCatsDTOFromStorage()
         {
             return CatStorage.catList;
         }
 
-        [Route("GetCatsDTO_LocalStorage_ById/{id:int}")]
         //Swagger throws exception with custom route annotation
         //HttpGet: /api/CatClubAPI/{id}
         //Route: /api/CatClubAPI/{id}
         //It looks like it works in the same way
-        [HttpGet]
+        [HttpGet("GetCatsDTO_LocalStorage_ById/{id:int}")]
         public CatDTO GetCatsDTOFromStorage(int id)
         {
             return CatStorage.catList.FirstOrDefault(x => x.Id == id);
@@ -54,8 +52,7 @@ namespace CatClub_Api.Controllers
         //Action Results
         //Using action result I can use methods like Ok(), BadRequest() etc..
 
-        [Route("GetCats_ActionResult")]
-        [HttpGet]
+        [HttpGet("GetCats_ActionResult")]
         public ActionResult<IEnumerable<Cat>> GetCats_ActionResult()
         {
             return Ok(new List<Cat>()
@@ -66,8 +63,8 @@ namespace CatClub_Api.Controllers
             });
 
         }
-        [Route("GetCatsDTO_ActionResult")]
-        [HttpGet]
+       
+        [HttpGet("GetCatsDTO_ActionResult")]
         public ActionResult<IEnumerable<CatDTO>> GetCatsDTO_ActionResult()
         {
             return Ok(new List<CatDTO>
@@ -78,15 +75,13 @@ namespace CatClub_Api.Controllers
             });
         }
 
-        [Route("GetCatsDTO_LocalStorage_ActionResult")]
-        [HttpGet]
+        [HttpGet("GetCatsDTO_LocalStorage_ActionResult")]
         public ActionResult<IEnumerable<CatDTO>> GetCatsDTOFromStorage_ActionResult()
         {
             return Ok(CatStorage.catList);
         }
 
-        [Route("GetCatsDTO_LocalStorage_GetCatById_ActionResultById/{id:int}")]
-        [HttpGet]
+        [HttpGet("GetCatsDTO_LocalStorage_GetCatById_ActionResultById/{id:int}")]
         public ActionResult<CatDTO> GetCatsDTOFromStorage_ActionResult(int id)
         {
             // 3 cats hardcoded starting from 0 index, indexes below 0 not allowed
