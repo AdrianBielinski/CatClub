@@ -1,6 +1,7 @@
 ﻿using CatClub_Api.Data;
 using CatClub_Api.Models;
 using CatClub_Api.Models.Dto;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CatClub_Api.Controllers
@@ -9,7 +10,8 @@ namespace CatClub_Api.Controllers
     [ApiController]
     public class CatClubAPIController : ControllerBase
     {
-        
+        #region HttpGet
+
         [HttpGet("GetCats")]
         public IEnumerable<Cat> GetCats()
         {
@@ -106,5 +108,31 @@ namespace CatClub_Api.Controllers
 
             return Ok(cat);
         }
+        #endregion
+
+        #region HttpPost
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<CatDTO> CreateCat([FromBody] CatDTO catDTO)
+        {
+            if (catDTO == null)
+            {
+                return BadRequest(catDTO);
+            }
+
+            if (catDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            catDTO.Id = CatStorage.catList.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+            CatStorage.catList.Add(catDTO);
+
+            return Ok(catDTO);
+        }
+
+        #endregion
     }
 }
