@@ -3,6 +3,7 @@ using CatClub_Api.Models;
 using CatClub_Api.Models.Dto;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
 
 namespace CatClub_Api.Controllers
 {
@@ -45,8 +46,8 @@ namespace CatClub_Api.Controllers
         //HttpGet: /api/CatClubAPI/{id}
         //Route: /api/CatClubAPI/{id}
         //It looks like it works in the same way
-        [HttpGet("GetCatsDTO_LocalStorage_ById/{id:int}")]
-        public CatDTO GetCatsDTOFromStorage(int id)
+        [HttpGet("GetCatsDTO_LocalStorage_ById/{id:int}", Name ="GetCatById")]
+        public CatDTO GetCatsDTOFromStorage_ById(int id)
         {
             return CatStorage.catList.FirstOrDefault(x => x.Id == id);
         }
@@ -111,11 +112,11 @@ namespace CatClub_Api.Controllers
         #endregion
 
         #region HttpPost
-        [HttpPost]
+        [HttpPost("CreateCatDTO")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public ActionResult<CatDTO> CreateCat([FromBody] CatDTO catDTO)
+        public ActionResult<CatDTO> CreateCatDTO([FromBody] CatDTO catDTO)
         {
             if (catDTO == null)
             {
@@ -131,6 +132,28 @@ namespace CatClub_Api.Controllers
             CatStorage.catList.Add(catDTO);
 
             return Ok(catDTO);
+        }
+
+        [HttpPost("CreateCatDTOCreatedAtRoute")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public ActionResult<CatDTO> CreateCatDTOCreatedAtRoute([FromBody] CatDTO catDTO)
+        {
+            if (catDTO == null)
+            {
+                return BadRequest(catDTO);
+            }
+
+            if (catDTO.Id > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+
+            catDTO.Id = CatStorage.catList.OrderByDescending(x => x.Id).FirstOrDefault().Id + 1;
+            CatStorage.catList.Add(catDTO);
+
+            return CreatedAtRoute("GetCatById", new { id = catDTO.Id }, catDTO);
         }
 
         #endregion
