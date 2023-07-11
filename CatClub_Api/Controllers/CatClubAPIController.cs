@@ -197,5 +197,24 @@ namespace CatClub_Api.Controllers
         }
 
         #endregion
+
+        #region HttpPut
+        [HttpPut("{id:int}", Name = "UpdateCatDTOById")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public IActionResult UpdateCatDTO(int id, [FromBody] CatDTO catDTO)
+        {
+            if (catDTO.Id == null || id != catDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            var cat = CatStorage.catList.FirstOrDefault(x => x.Id == id);
+            cat.Name = catDTO.Name;
+            cat.Description = catDTO.Description;
+
+            return NoContent();
+        }
+        #endregion
     }
 }

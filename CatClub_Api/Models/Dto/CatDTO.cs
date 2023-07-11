@@ -16,5 +16,7 @@ namespace CatClub_Api.Models.Dto
 
         public DateTime CreatedDate { get; set; }
 
+        public string Description { get; set; }
+
     }
 }

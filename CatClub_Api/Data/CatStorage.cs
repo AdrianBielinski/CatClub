@@ -6,9 +6,9 @@ namespace CatClub_Api.Data
     {
         public static List<CatDTO> catList = new List<CatDTO>
         {
-                new CatDTO{Id=0, Name="Pumczak"},
-                new CatDTO{Id=1,Name="Kita"},
-                new CatDTO{Id=2, Name="Plamka"}
+                new CatDTO{Id=1, Name="Pumczak", Description="Grubasek"},
+                new CatDTO{Id=2,Name="Kita", Description="Matka Kotka"},
+                new CatDTO{Id=3, Name="Plamka", Description="Trollinho"}
         };
     }
 }
