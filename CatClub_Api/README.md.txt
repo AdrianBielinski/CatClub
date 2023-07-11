@@ -1,2 +1,0 @@
-Hello, in this project I am learning how to write REST applications. The code is meant to be simple and teach me "what it comes with". Be aware that I am not using design patterns, interfaces or SOLID/DRY assumptions here.
-I am familiar with them, but I am not using them intentionally.
