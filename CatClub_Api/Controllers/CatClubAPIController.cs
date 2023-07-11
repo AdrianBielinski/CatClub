@@ -24,7 +24,7 @@ namespace CatClub_Api.Controllers
             };
 
         }
-        
+
         [HttpGet("GetCatsDTO")]
         public IEnumerable<CatDTO> GetCatsDTO()
         {
@@ -35,7 +35,7 @@ namespace CatClub_Api.Controllers
                 new CatDTO{Id=2, Name="Plamka"}
             };
         }
-        
+
         [HttpGet("GetCatsDTO_LocalStorage")]
         public IEnumerable<CatDTO> GetCatsDTOFromStorage()
         {
@@ -46,7 +46,7 @@ namespace CatClub_Api.Controllers
         //HttpGet: /api/CatClubAPI/{id}
         //Route: /api/CatClubAPI/{id}
         //It looks like it works in the same way
-        [HttpGet("GetCatsDTO_LocalStorage_ById/{id:int}", Name ="GetCatById")]
+        [HttpGet("GetCatsDTO_LocalStorage_ById/{id:int}", Name = "GetCatById")]
         public CatDTO GetCatsDTOFromStorage_ById(int id)
         {
             return CatStorage.catList.FirstOrDefault(x => x.Id == id);
@@ -66,7 +66,7 @@ namespace CatClub_Api.Controllers
             });
 
         }
-       
+
         [HttpGet("GetCatsDTO_ActionResult")]
         public ActionResult<IEnumerable<CatDTO>> GetCatsDTO_ActionResult()
         {
@@ -140,6 +140,20 @@ namespace CatClub_Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<CatDTO> CreateCatDTOCreatedAtRoute([FromBody] CatDTO catDTO)
         {
+
+            // Aby wytestować taką walidacje należy zakomentować [ApiController]
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
+
+            // Customowa walidacja - załóżmy, że nazaw musi być unikatowa
+            if (CatStorage.catList.FirstOrDefault(x => x.Name == catDTO.Name) != null)
+            {
+                ModelState.AddModelError("CustomValidationError", "Kot o podanej nazwie już istnieje!");
+                return BadRequest(ModelState);
+            }
+
             if (catDTO == null)
             {
                 return BadRequest(catDTO);
@@ -154,6 +168,32 @@ namespace CatClub_Api.Controllers
             CatStorage.catList.Add(catDTO);
 
             return CreatedAtRoute("GetCatById", new { id = catDTO.Id }, catDTO);
+        }
+
+        #endregion
+
+        #region HttpRemove
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+
+        [HttpDelete("{id:int}", Name = "DeleteCatDTOById")]
+        public IActionResult DeleteCatDTO(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var catDTO = CatStorage.catList.FirstOrDefault(x => x.Id == id);
+
+            if (catDTO == null)
+            {
+                return NotFound();
+            }
+
+            CatStorage.catList.Remove(catDTO);
+            return NoContent();
         }
 
         #endregion
